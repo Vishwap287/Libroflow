@@ -337,7 +337,14 @@ async function loadRecentIssued() {
       .slice(0, 7);
 
     if (active.length === 0) {
-      body.innerHTML = `<tr class="empty-row"><td colspan="4">No books currently issued. All inventory available on shelf!</td></tr>`;
+      body.innerHTML = `
+        <tr class="empty-row">
+          <td colspan="4" style="text-align:center; padding:32px 16px; border:none;">
+            <div style="font-size:26px; margin-bottom:8px;">📚</div>
+            <div style="font-weight:700; color:var(--ink); font-size:14.5px;">No books currently issued</div>
+            <div style="color:var(--slate); font-size:12.5px; margin-top:4px;">All library inventory is available on shelf!</div>
+          </td>
+        </tr>`;
       return;
     }
 
