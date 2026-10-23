@@ -1,8 +1,16 @@
 // ===================== Global Config =====================
+const PORTAL_RENDER_PROD_API = "https://libroflow-gq7o.onrender.com/api";
+const portalIsLocal = typeof window !== "undefined" && window.location && 
+  (window.location.hostname === "localhost" || 
+   window.location.hostname === "127.0.0.1" || 
+   window.location.hostname.startsWith("192.168."));
+
 const PORTAL_BACKEND_HOST = (typeof window !== "undefined" && window.location && window.location.hostname) ? window.location.hostname : "localhost";
+
 const PORTAL_API_ROOT = (typeof window !== "undefined" && window.LIBROFLOW_API_URL)
   || (typeof localStorage !== "undefined" && localStorage.getItem("libroflow_api_url"))
-  || `http://${PORTAL_BACKEND_HOST}:8080/api`;
+  || (portalIsLocal ? `http://${PORTAL_BACKEND_HOST}:8080/api` : PORTAL_RENDER_PROD_API);
+
 const PORTAL_API_BASE_URL = `${PORTAL_API_ROOT}/portal`;
 const ROOT_API_BASE_URL = PORTAL_API_ROOT; // for shared endpoints like /books
 

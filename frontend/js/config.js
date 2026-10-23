@@ -1,8 +1,15 @@
 // ===================== Global Config =====================
+const RENDER_PROD_API = "https://libroflow-gq7o.onrender.com/api";
+const isLocal = typeof window !== "undefined" && window.location && 
+  (window.location.hostname === "localhost" || 
+   window.location.hostname === "127.0.0.1" || 
+   window.location.hostname.startsWith("192.168."));
+
 const BACKEND_HOST = (typeof window !== "undefined" && window.location && window.location.hostname) ? window.location.hostname : "localhost";
+
 const API_BASE_URL = (typeof window !== "undefined" && window.LIBROFLOW_API_URL)
   || (typeof localStorage !== "undefined" && localStorage.getItem("libroflow_api_url"))
-  || `http://${BACKEND_HOST}:8080/api`;
+  || (isLocal ? `http://${BACKEND_HOST}:8080/api` : RENDER_PROD_API);
 
 // ===================== Auth Helpers =====================
 function isJwtExpired(token) {
