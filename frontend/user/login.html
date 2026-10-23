@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Member Sign in · LibroFlow</title>
+<link rel="stylesheet" href="../css/style.css" />
+<link rel="stylesheet" href="css/portal.css" />
+</head>
+<body>
+
+<div class="login-shell">
+
+  <div class="login-visual">
+    <div class="catalog-card" style="width:120px;height:160px;top:60px;right:90px;transform:rotate(8deg);"></div>
+    <div class="catalog-card" style="width:120px;height:160px;top:120px;right:150px;transform:rotate(-6deg);"></div>
+    <div class="catalog-card" style="width:120px;height:160px;bottom:70px;right:60px;transform:rotate(-3deg);"></div>
+
+    <img src="../img/logo.png" alt="LibroFlow" style="width:52px; height:52px; border-radius:14px; object-fit:cover; margin-bottom:20px; box-shadow:0 8px 24px rgba(0,0,0,0.3); background:white;" />
+    <h2>Your loans, your fines, all in one place.</h2>
+    <p>Sign in to see what you've borrowed, what's due, and settle any pending fines — right from your own member dashboard.</p>
+
+    <div class="stats-row">
+      <div>
+        <div class="n">₹5/day</div>
+        <div class="l">Overdue fine rate</div>
+      </div>
+      <div>
+        <div class="n">24/7</div>
+        <div class="l">Account access</div>
+      </div>
+      <div>
+        <div class="n">Instant</div>
+        <div class="l">Fine payment tracking</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="login-form-side">
+    <div class="login-card">
+      <img src="../img/logo.png" alt="LibroFlow" class="login-mobile-logo" />
+      <h1>Member sign in</h1>
+      <p class="lede">Access your library account, profile, and fines.</p>
+
+      <div class="login-error" id="loginError"></div>
+
+      <form id="loginForm">
+        <div class="form-field">
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="you@example.com" autocomplete="username" required />
+        </div>
+        <div class="form-field">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" required />
+        </div>
+
+        <div class="flex-between" style="margin-bottom:16px;">
+          <a href="forgot-password.html" class="text-sm" style="color:var(--teal-dark); font-weight:600;">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="loginBtn">Sign in</button>
+      </form>
+
+      <div class="demo-hint">
+        <div style="font-weight:600; color:var(--ink); margin-bottom:8px; display:flex; align-items:center; justify-content:space-between;">
+          <span>Demo Member</span>
+          <span style="font-size:11px; color:var(--teal); font-weight:600;">(Click to fill)</span>
+        </div>
+        <button type="button" class="btn btn-secondary btn-sm" style="width:100%; justify-content:center; font-size:12px;" onclick="fillPortalLogin('karthik.raja@example.com','user123')">
+          👤 Karthik Raja (Member)
+        </button>
+      </div>
+
+      <div class="demo-hint" style="text-align:center; margin-top:14px;">
+        New member? <a href="register.html" style="color:var(--teal); font-weight:600;">Create an account</a>
+      </div>
+
+      <div style="text-align:center; margin-top:20px; font-size:13px; color:var(--slate);">
+        Are you a librarian or admin? <a href="../login.html" style="color:var(--teal); font-weight:600; text-decoration:none;">Admin Portal &rarr;</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="js/portal.js"></script>
+<script>
+  if (portalGetToken()) {
+    window.location.href = "dashboard.html";
+  }
+
+  function fillPortalLogin(e, p) {
+    document.getElementById("email").value = e;
+    document.getElementById("password").value = p;
+  }
+
+  const form = document.getElementById("loginForm");
+  const errorBox = document.getElementById("loginError");
+  const loginBtn = document.getElementById("loginBtn");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    errorBox.style.display = "none";
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    loginBtn.disabled = true;
+    loginBtn.textContent = "Signing in...";
+
+    try {
+      const response = await fetch(PORTAL_API_BASE_URL + "/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Invalid email or password");
+      }
+
+      portalSetSession(data.token, {
+        userId: data.userId,
+        fullName: data.fullName,
+        email: data.email,
+        department: data.department,
+      });
+
+      window.location.href = "dashboard.html";
+    } catch (err) {
+      errorBox.textContent = err.message || "Unable to sign in. Please check your connection to the server.";
+      errorBox.style.display = "block";
+    } finally {
+      loginBtn.disabled = false;
+      loginBtn.textContent = "Sign in";
+    }
+  });
+</script>
+
+</body>
+</html>

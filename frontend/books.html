@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Books · LibroFlow Library Manager</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div class="app-shell">
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <img src="img/logo.png" alt="LibroFlow" class="brand-logo" />
+      <div>
+        <div class="name">LibroFlow</div>
+        <div class="sub">LIBRARY MANAGER</div>
+      </div>
+    </div>
+
+    <div class="nav-section-label">Overview</div>
+    <a href="dashboard.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+      Dashboard
+    </a>
+
+    <div class="nav-section-label">Catalog</div>
+    <a href="books.html" class="nav-link active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      Books
+    </a>
+    <a href="members.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Members
+    </a>
+    <a href="transactions.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+      Issue / Return
+    </a>
+
+    <div class="nav-section-label">Member Portal</div>
+    <a href="manage-fines.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+      Fines
+    </a>
+
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="avatar" data-user-avatar>A</div>
+        <div class="who">
+          <div class="n" data-user-name>—</div>
+          <div class="r" data-user-role>—</div>
+        </div>
+      </div>
+      <button class="logout-btn" data-logout>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sign out
+      </button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <h1>Books</h1>
+        <div class="subtitle">Manage your library's catalog</div>
+      </div>
+      <div class="flex-row">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="searchInput" placeholder="Search title, author, ISBN…" />
+        </div>
+        <button class="btn btn-primary" id="addBookBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add book
+        </button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Cover</th>
+              <th>Title</th>
+              <th>Category</th>
+              <th>ISBN</th>
+              <th>Copies</th>
+              <th>Status</th>
+              <th style="text-align:right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="booksBody">
+            <tr class="empty-row"><td colspan="7">Loading books…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Add / Edit Book Modal -->
+<div class="modal-overlay" id="bookModal" style="display:none;">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="bookModalTitle">Add book</h3>
+      <button class="btn btn-ghost btn-sm" id="closeBookModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <form id="bookForm">
+        <input type="hidden" id="bookId" />
+        <div class="form-grid">
+          <div class="form-field full">
+            <label for="title">Title</label>
+            <input type="text" id="title" required />
+          </div>
+          <div class="form-field full">
+            <label for="imageUrl">Cover image URL (optional)</label>
+            <input type="url" id="imageUrl" placeholder="https://example.com/cover.jpg" />
+            <span class="hint">Paste a link to an image online — a placeholder is shown if left blank.</span>
+          </div>
+          <div class="form-field">
+            <label for="author">Author</label>
+            <input type="text" id="author" required />
+          </div>
+          <div class="form-field">
+            <label for="isbn">ISBN</label>
+            <input type="text" id="isbn" />
+          </div>
+          <div class="form-field">
+            <label for="category">Category</label>
+            <input type="text" id="category" placeholder="e.g. Fiction" />
+          </div>
+          <div class="form-field">
+            <label for="publisher">Publisher</label>
+            <input type="text" id="publisher" />
+          </div>
+          <div class="form-field">
+            <label for="publishedYear">Published year</label>
+            <input type="number" id="publishedYear" min="1000" max="2100" />
+          </div>
+          <div class="form-field">
+            <label for="rackLocation">Rack location</label>
+            <input type="text" id="rackLocation" placeholder="e.g. A1" />
+          </div>
+          <div class="form-field">
+            <label for="totalCopies">Total copies</label>
+            <input type="number" id="totalCopies" min="0" required />
+          </div>
+          <div class="form-field">
+            <label for="price">Price</label>
+            <input type="number" id="price" min="0" step="0.01" />
+          </div>
+          <div class="form-field full">
+            <label for="description">Description</label>
+            <textarea id="description" rows="3" placeholder="A short summary of the book…"></textarea>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="cancelBookBtn">Cancel</button>
+      <button class="btn btn-primary" id="saveBookBtn">Save book</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/books.js"></script>
+</body>
+</html>

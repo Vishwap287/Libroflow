@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Create account · LibroFlow</title>
+<link rel="stylesheet" href="../css/style.css" />
+<link rel="stylesheet" href="css/portal.css" />
+</head>
+<body>
+
+<div class="login-shell">
+
+  <div class="login-visual">
+    <div class="catalog-card" style="width:120px;height:160px;top:60px;right:90px;transform:rotate(8deg);"></div>
+    <div class="catalog-card" style="width:120px;height:160px;top:120px;right:150px;transform:rotate(-6deg);"></div>
+    <div class="catalog-card" style="width:120px;height:160px;bottom:70px;right:60px;transform:rotate(-3deg);"></div>
+
+    <img src="../img/logo.png" alt="LibroFlow" style="width:52px; height:52px; border-radius:14px; object-fit:cover; margin-bottom:20px; box-shadow:0 8px 24px rgba(0,0,0,0.3); background:white;" />
+    <h2>Join the library in under a minute.</h2>
+    <p>Create your member account to start tracking your loans, due dates, and fines online — no front-desk visit required.</p>
+
+    <div class="stats-row">
+      <div>
+        <div class="n">Free</div>
+        <div class="l">Membership signup</div>
+      </div>
+      <div>
+        <div class="n">&lt; 1 min</div>
+        <div class="l">To get set up</div>
+      </div>
+      <div>
+        <div class="n">Secure</div>
+        <div class="l">Password encryption</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="login-form-side">
+    <div class="login-card">
+      <img src="../img/logo.png" alt="LibroFlow" class="login-mobile-logo" />
+      <h1>Create your account</h1>
+      <p class="lede">Register as a library member.</p>
+
+      <div class="login-error" id="registerError"></div>
+
+      <form id="registerForm">
+        <div class="form-field">
+          <label for="fullName">Full name</label>
+          <input type="text" id="fullName" placeholder="e.g. Karthik Raja" autocomplete="name" required />
+        </div>
+        <div class="form-field">
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="you@example.com" autocomplete="username" required />
+        </div>
+        <div class="form-field">
+          <label for="phone">Phone number</label>
+          <input type="text" id="phone" placeholder="e.g. 9876543210" autocomplete="tel" />
+          <span class="hint">Used to verify your identity if you forget your password.</span>
+        </div>
+        <div class="form-field">
+          <label for="department">Department</label>
+          <input type="text" id="department" placeholder="e.g. Computer Science" />
+        </div>
+        <div class="form-field">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="At least 6 characters" autocomplete="new-password" required minlength="6" />
+        </div>
+        <div class="form-field">
+          <label for="confirmPassword">Confirm password</label>
+          <input type="password" id="confirmPassword" placeholder="Re-enter password" autocomplete="new-password" required minlength="6" />
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="registerBtn">Create account</button>
+      </form>
+
+      <div class="demo-hint" style="text-align:center;">
+        Already a member? <a href="login.html" style="color:var(--teal-dark); font-weight:600;">Sign in instead</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="js/portal.js"></script>
+<script>
+  if (portalGetToken()) {
+    window.location.href = "dashboard.html";
+  }
+
+  const form = document.getElementById("registerForm");
+  const errorBox = document.getElementById("registerError");
+  const registerBtn = document.getElementById("registerBtn");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    errorBox.style.display = "none";
+
+    const fullName = document.getElementById("fullName").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const department = document.getElementById("department").value.trim();
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+
+    if (password !== confirmPassword) {
+      errorBox.textContent = "Passwords do not match.";
+      errorBox.style.display = "block";
+      return;
+    }
+
+    registerBtn.disabled = true;
+    registerBtn.textContent = "Creating account...";
+
+    try {
+      const response = await fetch(PORTAL_API_BASE_URL + "/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fullName, email, phone, department, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Could not create account");
+      }
+
+      portalSetSession(data.token, {
+        userId: data.userId,
+        fullName: data.fullName,
+        email: data.email,
+        department: data.department,
+      });
+
+      window.location.href = "dashboard.html";
+    } catch (err) {
+      errorBox.textContent = err.message || "Unable to create account. Please check your connection to the server.";
+      errorBox.style.display = "block";
+    } finally {
+      registerBtn.disabled = false;
+      registerBtn.textContent = "Create account";
+    }
+  });
+</script>
+
+</body>
+</html>

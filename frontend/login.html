@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sign in · LibroFlow Library Manager</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div class="login-shell">
+
+  <div class="login-visual">
+    <div class="catalog-card" style="width:120px;height:160px;top:60px;right:90px;transform:rotate(8deg);"></div>
+    <div class="catalog-card" style="width:120px;height:160px;top:120px;right:150px;transform:rotate(-6deg);"></div>
+    <div class="catalog-card" style="width:120px;height:160px;bottom:70px;right:60px;transform:rotate(-3deg);"></div>
+
+    <img src="img/logo.png" alt="LibroFlow" style="width:52px; height:52px; border-radius:14px; object-fit:cover; margin-bottom:20px; box-shadow:0 8px 24px rgba(0,0,0,0.3); background:white;" />
+    <h2>The full catalog, every loan, and every member — in one place.</h2>
+    <p>LibroFlow keeps track of your shelves so you don't have to: issue and return books, watch fines accrue, and see exactly what's overdue at a glance.</p>
+
+    <div class="stats-row">
+      <div>
+        <div class="n">2,400+</div>
+        <div class="l">Titles catalogued</div>
+      </div>
+      <div>
+        <div class="n">14 day</div>
+        <div class="l">Standard loan period</div>
+      </div>
+      <div>
+        <div class="n">24/7</div>
+        <div class="l">Desk access</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="login-form-side">
+    <div class="login-card">
+      <img src="img/logo.png" alt="LibroFlow" class="login-mobile-logo" />
+      <h1>Welcome back</h1>
+      <p class="lede">Sign in to manage the catalog, members, and loans.</p>
+
+      <div class="login-error" id="loginError"></div>
+
+      <form id="loginForm">
+        <div class="form-field">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" placeholder="admin" autocomplete="username" required />
+        </div>
+        <div class="form-field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password" required />
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="loginBtn">Sign in</button>
+      </form>
+
+      <div class="demo-hint">
+        <div style="font-weight:600; color:var(--ink); margin-bottom:8px; display:flex; align-items:center; justify-content:space-between;">
+          <span>Demo Accounts</span>
+          <span style="font-size:11px; color:var(--teal); font-weight:600;">(Click to fill)</span>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button type="button" class="btn btn-secondary btn-sm" style="flex:1; justify-content:center; font-size:12px;" onclick="fillLogin('admin','admin123')">
+            🛡️ Admin
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" style="flex:1; justify-content:center; font-size:12px;" onclick="fillLogin('librarian','librarian123')">
+            📚 Librarian
+          </button>
+        </div>
+      </div>
+
+      <div style="text-align:center; margin-top:20px; font-size:13px; color:var(--slate);">
+        Looking for the member area? <a href="user/login.html" style="color:var(--teal); font-weight:600; text-decoration:none;">Member Portal &rarr;</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="js/config.js"></script>
+<script>
+  // If already logged in, skip straight to dashboard
+  if (getToken()) {
+    window.location.href = "dashboard.html";
+  }
+
+  function fillLogin(u, p) {
+    document.getElementById("username").value = u;
+    document.getElementById("password").value = p;
+  }
+
+  const form = document.getElementById("loginForm");
+  const errorBox = document.getElementById("loginError");
+  const loginBtn = document.getElementById("loginBtn");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    errorBox.style.display = "none";
+
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value;
+
+    loginBtn.disabled = true;
+    loginBtn.textContent = "Signing in...";
+
+    try {
+      const response = await fetch(API_BASE_URL + "/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Invalid username or password");
+      }
+
+      setSession(data.token, {
+        username: data.username,
+        fullName: data.fullName,
+        role: data.role,
+      });
+
+      window.location.href = "dashboard.html";
+    } catch (err) {
+      errorBox.textContent = err.message || "Unable to sign in. Please check your connection to the server.";
+      errorBox.style.display = "block";
+    } finally {
+      loginBtn.disabled = false;
+      loginBtn.textContent = "Sign in";
+    }
+  });
+</script>
+
+</body>
+</html>

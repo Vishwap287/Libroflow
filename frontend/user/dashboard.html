@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>My Dashboard · LibroFlow</title>
+<link rel="stylesheet" href="../css/style.css" />
+<link rel="stylesheet" href="css/portal.css" />
+</head>
+<body>
+
+<div class="app-shell">
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <img src="../img/logo.png" alt="LibroFlow" class="brand-logo" />
+      <div>
+        <div class="name">LibroFlow</div>
+        <div class="sub">MEMBER PORTAL</div>
+      </div>
+    </div>
+
+    <div class="nav-section-label">My account</div>
+    <a href="dashboard.html" class="nav-link active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+      Dashboard
+    </a>
+    <a href="catalog.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      Book Catalog
+    </a>
+    <a href="profile.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      My Profile
+    </a>
+    <a href="fines.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+      My Fines
+    </a>
+
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="avatar" data-user-avatar>U</div>
+        <div class="who">
+          <div class="n" data-user-name>—</div>
+          <div class="r">Member</div>
+        </div>
+      </div>
+      <button class="logout-btn" data-logout>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sign out
+      </button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <!-- Executive Welcome Banner -->
+    <div class="welcome-banner">
+      <div class="welcome-info">
+        <div class="greeting" id="welcomeMsg">Welcome back 👋</div>
+        <div class="sub">
+          <span id="todayLabel">Overview of your library account</span>
+          <span class="live-pill"><span class="dot"></span>Member Portal Active</span>
+          <span id="userDeptBadge" style="display:inline-flex; align-items:center; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); padding:3px 10px; border-radius:20px; font-size:11.5px; font-weight:600; color:#cbd5e1;"></span>
+        </div>
+      </div>
+      <div class="welcome-actions">
+        <a href="catalog.html" class="btn btn-primary btn-sm">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          Browse Catalog
+        </a>
+        <a href="fines.html" class="btn btn-secondary btn-sm" style="background:rgba(255,255,255,0.12); color:white; border-color:rgba(255,255,255,0.2);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+          My Fines & Dues
+        </a>
+      </div>
+    </div>
+
+    <!-- 4 High-End Stat Cards -->
+    <div class="stat-grid" id="statGrid">
+      <div class="loading-row">Loading your account…</div>
+    </div>
+
+    <!-- Member Guidance & Status Panel -->
+    <div class="portal-guidance-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-bottom:24px;">
+      <div class="panel" style="margin-bottom:0; display:flex; flex-direction:column; justify-content:space-between;">
+        <div class="panel-header">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:34px; height:34px; border-radius:10px; background:#eff6ff; color:#2563eb; display:flex; align-items:center; justify-content:center;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            </div>
+            <div>
+              <h3 style="font-size:15px; margin:0;">Circulation & Borrowing Rules</h3>
+              <div class="cell-sub">Library loan terms for students & scholars</div>
+            </div>
+          </div>
+        </div>
+        <div class="panel-body" style="padding:18px 22px;">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+            <div style="background:#f8fafc; border:1px solid var(--border); border-radius:var(--radius-md); padding:12px 14px;">
+              <div style="font-size:11px; text-transform:uppercase; color:var(--slate); font-weight:700; letter-spacing:0.04em;">Loan Window</div>
+              <div style="font-size:18px; font-weight:800; color:var(--ink); margin-top:4px;">14 Days</div>
+              <div style="font-size:11.5px; color:var(--slate); margin-top:2px;">Standard loan period</div>
+            </div>
+            <div style="background:#f8fafc; border:1px solid var(--border); border-radius:var(--radius-md); padding:12px 14px;">
+              <div style="font-size:11px; text-transform:uppercase; color:var(--slate); font-weight:700; letter-spacing:0.04em;">Overdue Fee</div>
+              <div style="font-size:18px; font-weight:800; color:var(--rose); margin-top:4px;">₹5.00 / day</div>
+              <div style="font-size:11.5px; color:var(--slate); margin-top:2px;">Applied on overdue items</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-bottom:0; display:flex; flex-direction:column; justify-content:space-between;" id="standingCard">
+        <div class="panel-header">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:34px; height:34px; border-radius:10px; background:#ecfdf5; color:#059669; display:flex; align-items:center; justify-content:center;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div>
+              <h3 style="font-size:15px; margin:0;">Account Standing</h3>
+              <div class="cell-sub" id="standingSub">Good standing with library</div>
+            </div>
+          </div>
+          <span class="tab-badge paid" id="standingBadge">All Dues Clear</span>
+        </div>
+        <div class="panel-body" style="padding:18px 22px;">
+          <p style="font-size:13.5px; color:var(--slate); line-height:1.5; margin:0;" id="standingMsg">
+            Your membership is in active standing. You are permitted to borrow books directly from the online catalog anytime.
+          </p>
+          <div style="margin-top:14px; display:flex; gap:10px;" id="standingActions">
+            <a href="catalog.html" class="btn btn-secondary btn-sm" style="flex:1; justify-content:center;">Browse Shelves &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent History Panel -->
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <h3>Recent Fine History</h3>
+          <div class="cell-sub">History of your book loans and settlements</div>
+        </div>
+        <a href="fines.html" class="btn btn-ghost btn-sm">Full Statement →</a>
+      </div>
+      <div class="table-responsive">
+        <table class="mobile-stack-table">
+          <thead>
+            <tr><th>Book</th><th>Issued</th><th>Due</th><th>Returned</th><th>Overdue days</th><th>Fine</th><th>Status</th></tr>
+          </thead>
+          <tbody id="recentFinesBody">
+            <tr class="empty-row"><td colspan="7">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="js/portal.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

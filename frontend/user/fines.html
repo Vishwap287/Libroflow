@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>My Fines · LibroFlow</title>
+<link rel="stylesheet" href="../css/style.css" />
+<link rel="stylesheet" href="css/portal.css" />
+</head>
+<body>
+
+<div class="app-shell">
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <img src="../img/logo.png" alt="LibroFlow" class="brand-logo" />
+      <div>
+        <div class="name">LibroFlow</div>
+        <div class="sub">MEMBER PORTAL</div>
+      </div>
+    </div>
+
+    <div class="nav-section-label">My account</div>
+    <a href="dashboard.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+      Dashboard
+    </a>
+    <a href="catalog.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      Book Catalog
+    </a>
+    <a href="profile.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      My Profile
+    </a>
+    <a href="fines.html" class="nav-link active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+      My Fines
+    </a>
+
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="avatar" data-user-avatar>U</div>
+        <div class="who">
+          <div class="n" data-user-name>—</div>
+          <div class="r">Member</div>
+        </div>
+      </div>
+      <button class="logout-btn" data-logout>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sign out
+      </button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <h1>My Fines</h1>
+        <div class="subtitle">Search, filter, and pay your fines</div>
+      </div>
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchInput" placeholder="Search by date or amount…" />
+      </div>
+    </div>
+
+    <div class="flex-row" style="margin-bottom:16px; gap:8px;">
+      <button class="btn btn-secondary btn-sm" data-filter="ALL">All</button>
+      <button class="btn btn-secondary btn-sm" data-filter="UNPAID">Unpaid</button>
+      <button class="btn btn-secondary btn-sm" data-filter="PAID">Paid</button>
+    </div>
+
+    <div class="panel">
+      <div class="table-responsive">
+        <table class="mobile-stack-table">
+          <thead>
+            <tr>
+              <th>Book</th>
+              <th>Issued</th>
+              <th>Due</th>
+              <th>Returned</th>
+              <th>Overdue days</th>
+              <th>Fine amount</th>
+              <th>Status</th>
+              <th style="text-align:right;">Action</th>
+            </tr>
+          </thead>
+          <tbody id="finesBody">
+            <tr class="empty-row"><td colspan="8">Loading fines…</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pagination" id="pagination" style="display:none;">
+        <div class="info" id="pageInfo"></div>
+        <div class="controls" id="pageControls"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Modern Payment Confirmation Modal -->
+<div class="modal-overlay" id="paymentModal" style="display:none;">
+  <div class="modal" style="max-width:440px;">
+    <div class="modal-header" style="border-bottom:none; padding-bottom:12px;">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div style="width:42px; height:42px; border-radius:12px; background:#ecfdf5; color:#059669; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(16,185,129,0.18); flex-shrink:0;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        </div>
+        <div>
+          <h3 style="font-size:17px; margin:0; color:var(--ink);">Settle Library Fine</h3>
+          <div style="font-size:12.5px; color:var(--slate);">Instant Online Payment</div>
+        </div>
+      </div>
+      <button class="btn btn-ghost btn-sm" id="closePaymentModal" style="font-size:16px;" type="button">✕</button>
+    </div>
+
+    <div class="modal-body" style="padding-top:0;">
+      <!-- Total Amount Card -->
+      <div style="background:linear-gradient(135deg, #0b1120 0%, #1e293b 100%); border-radius:var(--radius-lg); padding:22px; text-align:center; color:white; margin-bottom:18px; box-shadow:0 10px 25px -4px rgba(15,23,42,0.3); position:relative; overflow:hidden;">
+        <div style="position:absolute; top:-40%; right:-20%; width:180px; height:180px; border-radius:50%; background:radial-gradient(circle, rgba(16,185,129,0.25) 0%, transparent 70%);"></div>
+        <div style="font-size:11.5px; text-transform:uppercase; letter-spacing:0.06em; color:#94a3b8; font-weight:600; margin-bottom:4px;">Total Fine Amount</div>
+        <div style="font-family:'Plus Jakarta Sans',monospace; font-size:38px; font-weight:800; color:#34d399; letter-spacing:-0.03em;" id="payModalAmount">₹0.00</div>
+        <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); border-radius:20px; padding:3px 10px; font-size:11px; color:#a7f3d0; margin-top:8px;">
+          <span style="width:6px; height:6px; border-radius:50%; background:#10b981;"></span>
+          Direct Fee Reconciliation
+        </div>
+      </div>
+
+      <!-- Breakdown box -->
+      <div style="background:#f8fafc; border:1px solid var(--border); border-radius:var(--radius-md); padding:14px 16px; margin-bottom:16px;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid #e2e8f0;">
+          <span style="font-size:12.5px; color:var(--slate);">Book Title</span>
+          <span style="font-size:13px; font-weight:700; color:var(--ink); text-align:right; max-width:220px;" id="payModalBookTitle">—</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span style="font-size:12.5px; color:var(--slate);">Overdue Days</span>
+          <span style="font-size:13px; font-weight:700; color:var(--ink);" id="payModalOverdue">0 days</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:12.5px; color:var(--slate);">Standard Rate</span>
+          <span style="font-size:12px; color:var(--slate-soft);">₹5.00 / day overdue</span>
+        </div>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:var(--slate);">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#10b981; flex-shrink:0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>Payment will be verified and settled immediately.</span>
+      </div>
+    </div>
+
+    <div class="modal-footer" style="padding:16px 28px; border-top:1px solid var(--border); display:flex; gap:10px; justify-content:flex-end; background:#fafafa; border-radius:0 0 var(--radius-lg) var(--radius-lg);">
+      <button class="btn btn-secondary" id="cancelPayBtn" type="button">Cancel</button>
+      <button class="btn btn-primary" id="confirmPayBtn" type="button" style="background:linear-gradient(135deg, #059669 0%, #10b981 100%); border-color:#059669; box-shadow:0 4px 12px rgba(16,185,129,0.3);">
+        Confirm & Pay
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modern Return Confirmation Modal -->
+<div class="modal-overlay" id="returnModal" style="display:none;">
+  <div class="modal" style="max-width:440px;">
+    <div class="modal-header" style="border-bottom:none; padding-bottom:12px;">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div style="width:42px; height:42px; border-radius:12px; background:#eff6ff; color:#2563eb; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(37,99,235,0.15); flex-shrink:0;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        </div>
+        <div>
+          <h3 style="font-size:17px; margin:0; color:var(--ink);">Return Borrowed Book</h3>
+          <div style="font-size:12.5px; color:var(--slate);">Confirm Check-in to Library</div>
+        </div>
+      </div>
+      <button class="btn btn-ghost btn-sm" id="closeReturnModal" style="font-size:16px;" type="button">✕</button>
+    </div>
+
+    <div class="modal-body" style="padding-top:0;">
+      <div style="background:#f8fafc; border:1px solid var(--border); border-radius:var(--radius-md); padding:16px; margin-bottom:14px;">
+        <div style="font-size:15px; font-weight:700; color:var(--ink); margin-bottom:4px;" id="returnModalBookTitle">Book Title</div>
+        <div style="font-size:13px; color:var(--slate); margin-bottom:12px;" id="returnModalBookAuthor">Author Name</div>
+        
+        <div style="display:flex; justify-content:space-between; align-items:center; padding-top:10px; border-top:1px solid #e2e8f0; font-size:12.5px;">
+          <span style="color:var(--slate);">Due Date:</span>
+          <span class="mono" style="font-weight:700; color:var(--ink);" id="returnModalDueDate">—</span>
+        </div>
+      </div>
+
+      <div id="returnModalWarning" style="display:none; background:#fef2f2; border:1px solid rgba(239,68,68,0.25); border-radius:var(--radius-md); padding:12px 14px; font-size:12.5px; color:#b91c1c; margin-bottom:6px;">
+        ⚠️ This book is overdue. Any overdue fine will be logged upon check-in.
+      </div>
+    </div>
+
+    <div class="modal-footer" style="padding:16px 28px; border-top:1px solid var(--border); display:flex; gap:10px; justify-content:flex-end; background:#fafafa; border-radius:0 0 var(--radius-lg) var(--radius-lg);">
+      <button class="btn btn-secondary" id="cancelReturnBtn" type="button">Cancel</button>
+      <button class="btn btn-primary" id="confirmReturnBtn" type="button" style="background:linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);">
+        Confirm Return
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="js/portal.js"></script>
+<script src="js/fines.js"></script>
+</body>
+</html>
